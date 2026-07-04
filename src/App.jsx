@@ -17,6 +17,7 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [visible, setVisible] = useState(goodsFromServer);
+  const [isReversed, setIsReversed] = useState(false);
 
   const isAlphabetical =
     [...visible].join(',') ===
@@ -24,18 +25,37 @@ export const App = () => {
   const isByLength =
     [...visible].join(',') ===
     [...visible].sort((a, b) => a.length - b.length).join(',');
-  const isInitial = visible.join(',') === goodsFromServer.join(',');
+  const isInitial =
+    visible.join(',') === goodsFromServer.join(',') && !isReversed;
 
   const sortAlphabetically = () => {
-    setVisible([...visible].sort((a, b) => a.localeCompare(b)));
+    const sorted = [...visible].sort((a, b) => a.localeCompare(b));
+
+    if (isReversed) {
+      sorted.reverse();
+    }
+
+    setVisible(sorted);
   };
 
   const sortByLength = () => {
-    setVisible([...visible].sort((a, b) => a.length - b.length));
+    const sorted = [...visible].sort((a, b) => a.length - b.length);
+
+    if (isReversed) {
+      sorted.reverse();
+    }
+
+    setVisible(sorted);
   };
 
   const reverseGoods = () => {
+    setIsReversed(!isReversed);
     setVisible([...visible].reverse());
+  };
+
+  const resetGoods = () => {
+    setVisible(goodsFromServer);
+    setIsReversed(false);
   };
 
   return (
@@ -59,7 +79,7 @@ export const App = () => {
 
         <button
           type="button"
-          className="button is-warning is-light"
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
           onClick={reverseGoods}
         >
           Reverse
@@ -69,7 +89,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => setVisible(goodsFromServer)}
+            onClick={resetGoods}
           >
             Reset
           </button>
