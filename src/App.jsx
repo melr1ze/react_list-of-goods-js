@@ -19,17 +19,30 @@ export const App = () => {
   const [visible, setVisible] = useState(goodsFromServer);
   const [isReversed, setIsReversed] = useState(false);
 
+  // Точные проверки текущего состояния массива
   const isAlphabetical =
     [...visible].join(',') ===
-    [...visible].sort((a, b) => a.localeCompare(b)).join(',');
+      [...goodsFromServer].sort((a, b) => a.localeCompare(b)).join(',') ||
+    [...visible].join(',') ===
+      [...goodsFromServer]
+        .sort((a, b) => a.localeCompare(b))
+        .reverse()
+        .join(',');
+
   const isByLength =
     [...visible].join(',') ===
-    [...visible].sort((a, b) => a.length - b.length).join(',');
+      [...goodsFromServer].sort((a, b) => a.length - b.length).join(',') ||
+    [...visible].join(',') ===
+      [...goodsFromServer]
+        .sort((a, b) => a.length - b.length)
+        .reverse()
+        .join(',');
+
   const isInitial =
     visible.join(',') === goodsFromServer.join(',') && !isReversed;
 
   const sortAlphabetically = () => {
-    const sorted = [...visible].sort((a, b) => a.localeCompare(b));
+    const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
 
     if (isReversed) {
       sorted.reverse();
@@ -39,7 +52,7 @@ export const App = () => {
   };
 
   const sortByLength = () => {
-    const sorted = [...visible].sort((a, b) => a.length - b.length);
+    const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
 
     if (isReversed) {
       sorted.reverse();
